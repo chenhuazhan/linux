@@ -112,4 +112,3 @@ Xftp的下载方式同Xshell，同样xftp的安装也是非常简单， 点击�
 
 ![img](https://mmbiz.qpic.cn/mmbiz_png/e1jmIzRpwWjuasrNIuMvySHliaEyHDYokp9ONibsOmgTibfg93xA2B1hDrIOkyA6wQHLJQ7poic7a9muniaGUucSEZw/640?tp=webp&wxfrom=5&wx_lazy=1&wx_co=1)
 
-在以后的Linux学习过程过程，直接打开虚拟机，然后用XShell连接操作就可以了。如果连接远程工具失败一定看虚拟机右上角有没有网络链接成功标志，若无法联网可以去「[Linux养成计划（一）](http://mp.weixin.qq.com/s?__biz=MzUzODcwMDIzOQ==&mid=2247485514&idx=1&sn=514ac94138530b496257a6855dafea1b&chksm=fad2f8eacda571fccc4f5831c684a5eec176c0cb55ab61ddc71c23f97aa86df5830a9feaafcd&scene=21#wechat_redirect)」这篇文章查看配置网络方法。
