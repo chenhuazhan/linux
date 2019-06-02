@@ -513,6 +513,6 @@ export HISTTIMEFORMAT
 
 
 
-##### 作者：XMJDCH 
 
-##### 来源：https://blog.csdn.net/xmjdch/article/details/73191894
+
+来源：https://blog.csdn.net/xmjdch/article/details/73191894
