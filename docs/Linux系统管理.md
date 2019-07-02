@@ -1,3 +1,5 @@
+
+
 ## 1  基本概念
 
 系统管理员的职责包括哪些？管理的对象包括哪些？
@@ -22,6 +24,13 @@
     - 互操作性高
     - 全面的多任务和真正的32位操作系统
     - 在服务器市场及嵌入式系统领域应用广泛，是一种高性能、低开支的可以替换其他昂贵操作系统的系统。
+5. 查看系统信息：dmesg
+
+![1560095730057](markdown-images/1560095730057.png)
+
+
+
+
 
 #### Linux的安装
 
@@ -77,6 +86,10 @@ du -hs ./* 查看当前目录下的所有文件夹和文件的大小
 
 
 
+
+
+
+
 ## 3  Linux桌面系统及配置
 
 1. 常见的窗口管理器
@@ -100,3 +113,161 @@ du -hs ./* 查看当前目录下的所有文件夹和文件的大小
 - `/proc`: Linux处理进程和系统信息的标准方法,用于存储和检索进程信息以及其他内核和内存信息.
 - `/etc`: 主机特定的系统配置
 - `/lib`: 这个目录里存放着系统最基本的动态链接共享库，其作用类 似于Windows里的DLL文件。几乎所有的应用程序都需要用到这些共享库.
+
+##  5  进程管理
+
+**top：显示操作系统进程信息，类似Windows的任务管理器**
+
+![1560083744707](markdown-images/1560083744707.png)
+
+在该界面下可以直接输入kill pid杀死其中的进程，按`q`退出界面
+
+
+
+ps：显示进程信息
+
+![1560084034899](markdown-images/1560084034899.png)
+
+
+
+ps -ef：显示更详细的进程信息
+
+![1560084081957](markdown-images/1560084081957.png)
+
+
+
+ps aux：类似ps -ef，但有一些列是不同的
+
+![1560084174736](markdown-images/1560084174736.png)
+
+
+
+
+
+## 6  网络管理
+
+
+
+ifconfig | 查看当前网络配置信息
+
+![1560084585614](markdown-images/1560084585614.png)
+
+![1560084793762](markdown-images/1560084793762.png)
+
+lo  本地环回
+
+etho  本地网卡
+
+关闭网卡：`ifconfig eth0 down`，在修改网卡mac地址前需要执行此操作
+
+启动网卡：``ifconfig eth0 up`
+
+更改mac地址（只在本次登陆有效）：`macchanger -m 00:11:11:11:11:11 eth0`
+
+![1560093368898](markdown-images/1560093368898.png)
+
+
+
+
+
+查看本地DNS server：cat /etc/resolv.conf 
+
+![1560093946876](markdown-images/1560093946876.png)
+
+
+
+
+
+netstat -pantu：查看tcp/udp连接
+
+打开浏览器浏览网页，再用此命令查看：
+
+![1560093695524](markdown-images/1560093695524.png)
+
+
+
+使用管道筛选调0.0.0.0，并只显示源地址和目标地址
+
+`netstat -pantu | egrep -v '0.0.0.0|:::' | awk '{print $4" " $5}'`
+
+![1560094629706](markdown-images/1560094629706.png)
+
+
+
+筛选目的地址（不包括端口号）并排序，重复只显示一次
+
+`netstat -pantu | egrep -v '0.0.0.0|:::' | awk '{print $5}' | egrep -v 'and|Address' | cut -d ':' -f 1 | sort | uniq`![1560095163160](markdown-images/1560095163160.png)
+
+这些IP信息可以利用`>`或`>>`管道符存进文件中保存起来
+
+
+
+route：路由操作命令
+
+
+
+### 网络配置
+
+#### 临时网络配置
+
+动态获取IP地址：`dhclient eth0`
+
+
+
+修改IP地址：`ifconfig eth0 ip/子网掩码`，如`ifconfig eth0 192.168.1.5/24`，修改之前需要down一下网卡：`ifconfig eth0 down`；
+
+仅仅修改IP地址往往会破环网络连接，接下来需要指定网关：`route add default gw 192.168.1.1`
+
+使用`netstat -nr`查看效果
+
+![1560237691449](markdown-images/1560237691449.png)
+
+添加静态路由（可选）：`route add -net 172.16.0.0/24 gw 192.168.1.100 eth0`；
+
+配置DNS服务器：`vi /etc/resolv.conf`
+
+添加DNS服务器信息：nameserver DNSIP地址
+
+![1560238436707](markdown-images/1560238436707.png)
+
+修改完成后启动网卡：`ifconfig eth0 up`；
+
+
+
+#### 永久生效（编辑网卡配置文件）
+
+```bash
+# 备份
+
+# 编辑
+vi  /etc/network/interfaces
+# 增加内容
+auto eth0
+iface eth0 inet static
+address 192.168.1.128
+netmask 255.255.255.0
+gateway 192.168.1.2
+# 可选
+network 192.168.20.0
+broadcast 192.168.20.255
+dns-nameservers 192.168.1.1 8.8.8.8
+
+# 静态地址
+up route add -net 172.16.5.0/24 gw 192.168.10.100 eth1
+down route del -net 172.24.0.0/24
+```
+
+
+
+## 操作系统运行级别
+
+运行级别0-6
+
+重启操作系统：`init 6`
+
+关闭操作系统：`init 0`
+
+
+
+
+
